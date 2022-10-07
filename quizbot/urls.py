@@ -15,7 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from .quiz.views import RandomQuestion
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # point my bot to a url
+    # bot sends the information to get data
+    # this is where bot finds data for a new question
+    path('api/random/',RandomQuestion.as_view(),name = 'random')
 ]
