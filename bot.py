@@ -4,6 +4,12 @@ from urllib import request
 import discord
 import requests
 
+def update_score(user,points):
+    url = "http://127.0.0.1:8000/api/score_update/"
+    new_score = {'name':user, 'points':points}
+    x= request.post(url, data = new_score)
+    return
+
 def get_question():
     qs = ""
     id = 1
@@ -17,8 +23,8 @@ def get_question():
         if item['is_correct']:
             answer = id
         id += 1
-
-    return(qs, answer)
+    points = json_data[0]['points']
+    return(qs, answer, points)
 
 # initiate discord
 # building connection to discord
@@ -36,23 +42,30 @@ async def on_message(message):
         return
     # in your discord channel when bot is turned on and user types in hello then bot will respond
     if message.content.startswith('$question'):
-        qs, answer = get_question()
+        qs, answer, points = get_question()
         await message.channel.send(qs)
 
         # checks for comments and whether user's input is digit
         def check(m):
             return m.author == message.author and m.content.isdigit()
-            try:
-                # creates websocket between user and server and waits for 5sec
-                # check:checks if there is user input
-                guess  = await client.wait_for('message', check = check, timeout=5.0)
-            except asyncio.TimeoutError:
-                return await message.channel.send(
-                    'Sorry! Time Out.'
-                )
-            if int(guess.content) == answer:
-                await message.channel.send("You are right")
-            else:
-                await message.channel.send("Opps!You are incorrect.")
+
+        try:
+            # creates websocket between user and server and waits for 5sec
+            # check:checks if there is user input and if the input is from that particular user who asked question.
+            # waits for the user to send message
+            guess  = await client.wait_for('message', check = check, timeout=5.0)
+        except asyncio.TimeoutError:
+            return await message.channel.send(
+                'Sorry! Time Out.'
+            )
+        if int(guess.content) == answer:
+            user = guess.author
+            msg = str(guess.author.name)+ 'got it right. +' + str(points) + 'points' 
+            await message.channel.send(msg)
+            update_score(user, points)
+        else:
+            await message.channel.send("Opps!You are incorrect.")
+
+            
 
     client.run('need token')
