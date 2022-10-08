@@ -16,11 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from .quiz.views import RandomQuestion
+from .Score.views import UpdateScores
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # point my bot to a url
     # bot sends the information to get data
     # this is where bot finds data for a new question
-    path('api/random/',RandomQuestion.as_view(),name = 'random')
+    path('api/random/',RandomQuestion.as_view(),name = 'random'),
+    path('api/score/update/',UpdateScores.as_view(),name = 'score_update'),
+
 ]
