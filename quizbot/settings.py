@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'quizbot.quiz',
     'rest_framework',
+    'quizbot.Score',
 ]
 
 MIDDLEWARE = [
