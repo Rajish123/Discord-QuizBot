@@ -4,6 +4,20 @@ from urllib import request
 import discord
 import requests
 
+# get scores of top 10 users
+def get_score():
+    leaderboard = ''
+    id = 1
+    response = request.get("http://127.0.0.1:8000/api/leaderboard")
+    json_data = json.loads(response.text)
+
+    # loops through users to show data
+    for item in json_data:
+        leaderboard += str(id) + ' ' + item['name'] + '.' + str(item['points']) + '\n'
+        id += 1
+    return leaderboard 
+
+
 def update_score(user,points):
     url = "http://127.0.0.1:8000/api/score_update/"
     new_score = {'name':user, 'points':points}
@@ -40,6 +54,11 @@ async def on_message(message):
     # if the message is sent from client i.e, bot
     if message.author == client.user:
         return
+
+    if message.content.startswith('$score'):
+        leaderboard = get_score()
+        await message.channel.send(leaderboard)
+    
     # in your discord channel when bot is turned on and user types in hello then bot will respond
     if message.content.startswith('$question'):
         qs, answer, points = get_question()
