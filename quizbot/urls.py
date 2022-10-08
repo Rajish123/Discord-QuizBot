@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from .quiz.views import RandomQuestion
-from .Score.views import UpdateScores
+from .Score.views import UpdateScores,Leaderboard
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +25,7 @@ urlpatterns = [
     # this is where bot finds data for a new question
     path('api/random/',RandomQuestion.as_view(),name = 'random'),
     path('api/score/update/',UpdateScores.as_view(),name = 'score_update'),
+    # leaderboard
+    path('api/score/leaderboard', Leaderboard.as_view(),name = 'leaderboard')
 
 ]
