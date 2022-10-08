@@ -8,7 +8,7 @@ import requests
 def get_score():
     leaderboard = ''
     id = 1
-    response = request.get("http://127.0.0.1:8000/api/leaderboard")
+    response = request.get("http://127.0.0.1:8000/api/leaderboard/")
     json_data = json.loads(response.text)
 
     # loops through users to show data
@@ -57,7 +57,7 @@ async def on_message(message):
 
     if message.content.startswith('$score'):
         leaderboard = get_score()
-        await message.channel.send(leaderboard)
+        await message.channel.send(leaderboard  )
     
     # in your discord channel when bot is turned on and user types in hello then bot will respond
     if message.content.startswith('$question'):
